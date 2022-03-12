@@ -25,8 +25,18 @@ clients_lock = threading.Lock()
 def translete_msg(json):
     return json
 
+def save_init_msg(json):
+   print(json) 
 
-#Client:
+def send_msg(json, connection):
+    global clients_lock
+    msg = json['name'] + ': ' + translete_msg(str(json['msg'])) + '\n'
+    with clients_lock:
+        for curr in  clients:
+            if(curr!=connection):
+                curr.sendall(msg.encode())
+
+
 def multi_threaded_client(connection):
     global clients_lock
 
@@ -37,20 +47,20 @@ def multi_threaded_client(connection):
     try:
         while True:
             data = connection.recv(2048)
-            #response = data.decode('utf-8') 
-             
-            response = json.loads(data)
-            msg = response['name'] + ': ' + response['msg'] 
-
+            
             if not data:
                 break
+              
+            response = json.loads(data)
             
-            msg_out = translete_msg(str(msg)) + '\n'
-            
-            with clients_lock:
-                for curr in  clients:
-                    if(curr!=connection):
-                        curr.sendall(msg.encode())
+            print (len(response)) 
+
+            if len(response) == 2:
+                save_init_msg(response)
+
+            else:
+                send_msg(response, connection)
+           
     finally:
         with clients_lock:
             clients.remove(connection)

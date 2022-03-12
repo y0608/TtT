@@ -3,6 +3,7 @@ from _thread import *
 import json
 
 header = {"name": "Radi", "language": "en", "msg":""}  # a real dict.
+init_header = {"name": "Radi", "language": "en"}
 
 ClientMultiSocket = socket.socket()
 host = '192.168.1.20'
@@ -17,6 +18,9 @@ except socket.error as e:
 
 res = ClientMultiSocket.recv(1024)
 
+def send_init_msg():
+    data = json.dumps(init_header)
+    ClientMultiSocket.send(bytes(data,encoding="utf-8"))
 
 def send_msg():
     while True:
@@ -31,6 +35,8 @@ def resive_msg():
         print(res.decode('utf-8'))
 
 
+
+send_init_msg()
 start_new_thread(resive_msg, ())
 send_msg()
 
