@@ -1,8 +1,8 @@
 import socket
-import json
-import os
 from _thread import *
 import threading
+import json
+import os
 
 ServerSideSocket = socket.socket()
 ThreadCount = 0
@@ -23,7 +23,7 @@ clients_lock = threading.Lock()
 name_to_client = {}
 name_to_language = {}
 
-def translete_msg(json):
+def translate_msg(json):
     return json
 
 def save_init_msg(json, connection):
@@ -33,14 +33,14 @@ def save_init_msg(json, connection):
 
 def send_msg(json, connection):
     global clients_lock
-    msg = json['name'] + ': ' + translete_msg(str(json['msg'])) + '\n'
+    msg = json['name'] + ': ' + translate_msg(str(json['msg'])) + '\n'
     
-    if json['resiver'] not in name_to_client:
+    if json['reciever'] not in name_to_client:
         msg = translate_msg("Reciever not available") + '\n'
         connection.sendall(msg.encode())
     else:
         with clients_lock:
-            name_to_client[json['resiver']].sendall(msg.encode())
+            name_to_client[json['reciever']].sendall(msg.encode())
 
 
 def multi_threaded_client(connection):

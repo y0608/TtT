@@ -6,8 +6,8 @@ ClientMultiSocket = socket.socket()
 host = '192.168.1.2'
 port = 2004
 
-header = {"name": "Radi", "language": "en", "reciever":"", "msg":""}  # a real dict.
-init_header = {"name": "Radi", "language": "en"}
+header = {"name": "Yoan", "language": "en", "reciever":"", "msg":""}  # a real dict.
+init_header = {"name": "Yoan", "language": "en"}
 
 print('Waiting for connection response')
 
@@ -35,7 +35,7 @@ def send_msg():
 def receive_msg():
     while True:
         res = ClientMultiSocket.recv(1024)
-        print(res.decode('utf-8'))
+        print('\n'+res.decode('utf-8'))
 
 
 
