@@ -7,7 +7,7 @@ import os
 ServerSideSocket = socket.socket()
 ThreadCount = 0
 
-host = '192.168.1.2'
+host = '192.168.1.33'
 port = 2004
 
 try:
