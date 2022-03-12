@@ -1,9 +1,9 @@
 import socket
 from _thread import *
-import json
+import json 
 
 ClientMultiSocket = socket.socket()
-host = '192.168.1.2'
+host = '192.168.1.33'
 port = 2004
 
 header = {"name": "Radi", "language": "en", "reciever":"", "msg":""}  # a real dict.

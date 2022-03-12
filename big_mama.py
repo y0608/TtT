@@ -3,6 +3,72 @@ from _thread import *
 import threading
 import json
 import os
+from argostranslate import package, translate
+
+
+def translate_msg(message, from_language, to_language):
+    from argostranslate import package, translate
+
+
+def translate_msg(msg, fromL, toL):
+
+    first = fromL.upper()
+    second = toL.upper()
+    output = ""
+    temp = ""
+    languages = {"EN": 0, "AR": 1, "ZH": 2, "FR": 3,
+                 "DE": 4, "IT": 5, "JA": 6, "PR": 7, "RU": 8, "ES": 9}
+    language_installers = {
+        languages["EN"] * 10 + languages["AR"]: 'models/en_ar.argosmodel.zip',
+        languages["EN"] * 10 + languages["ZH"]: 'models/en_zh.argosmodel.zip',
+        languages["EN"] * 10 + languages["FR"]: 'models/en_fr.argosmodel.zip',
+        languages["EN"] * 10 + languages["DE"]: 'models/en_de.argosmodel.zip',
+        languages["EN"] * 10 + languages["IT"]: 'models/en_it.argosmodel.zip',
+        languages["EN"] * 10 + languages["PR"]: 'models/en_pr.argosmodel.zip',
+        languages["EN"] * 10 + languages["RU"]: 'models/en_ru.argosmodel.zip',
+        languages["EN"] * 10 + languages["ES"]: 'models/en_es.argosmodel.zip',
+        languages["EN"] * 10 + languages["JA"]: 'models/en_ja.argosmodel.zip',
+        languages["AR"] * 10 + languages["EN"]: 'models/ar_en.argosmodel.zip',
+        languages["ZH"] * 10 + languages["EN"]: 'models/zh_en.argosmodel.zip',
+        languages["FR"] * 10 + languages["EN"]: 'models/fr_en.argosmodel.zip',
+        languages["DE"] * 10 + languages["EN"]: 'models/de_en.argosmodel.zip',
+        languages["IT"] * 10 + languages["EN"]: 'models/it_en.argosmodel.zip',
+        languages["PR"] * 10 + languages["EN"]: 'models/pr_en.argosmodel.zip',
+        languages["RU"] * 10 + languages["EN"]: 'models/ru_en.argosmodel.zip',
+        languages["ES"] * 10 + languages["EN"]: 'models/es_en.argosmodel.zip',
+        languages["JA"] * 10 + languages["EN"]: 'models/ja_en.argosmodel.zip'
+    }
+
+    # for value in language_installers.values():
+    #     if value != 0:
+    #         package.install_from_path(value)
+
+    if first not in ["EN", "AR", "ZH", "FR", "DE", "IT", "PR", "RU", "ES", "JA"] or second not in ["EN", "AR", "ZH", "FR", "DE", "IT", "PR", "RU", "ES", "JA"]:
+        print("oopsie")
+    if first==second:
+        return msg
+    elif first != "EN" and second != "EN":
+        installed_languages = translate.get_installed_languages()
+        translation = installed_languages[languages[first]].get_translation(
+            installed_languages[languages["EN"]])
+        translation2 = installed_languages[languages["EN"]].get_translation(
+            installed_languages[languages[second]])
+
+        temp += translation.translate(msg.strip()) + "\n"
+
+        output += translation2.translate(temp.strip()) + "\n"
+    else:
+        installed_languages = translate.get_installed_languages()
+        for i in installed_languages:
+            print(i.name)
+
+        translation = installed_languages[languages[first]].get_translation(
+            installed_languages[languages[second]])
+
+        output += translation.translate(msg.strip()) + "\n"
+
+    return output
+
 
 ServerSideSocket = socket.socket()
 ThreadCount = 0
@@ -23,62 +89,71 @@ clients_lock = threading.Lock()
 name_to_client = {}
 name_to_language = {}
 
-def translate_msg(json):
-    return json
+
+def translate_pager_msg(json):
+    from_language = json["language"]
+    to_language = name_to_language[json["reciever"]]
+    print(from_language + '   ' + to_language)
+    message = json["msg"]
+    msg = translate_msg(message, from_language, to_language)
+    return msg
+
 
 def save_init_msg(json, connection):
-    name_to_client[json["name"]]=connection
-    name_to_language[json["name"]]=json["language"]
+    name_to_client[json["name"]] = connection
+    name_to_language[json["name"]] = json["language"]
 
 
-def send_msg(json, connection):
+def send_msg(json):
     global clients_lock
-    msg = json['name'] + ': ' + translate_msg(str(json['msg'])) + '\n'
-    
     if json['reciever'] not in name_to_client:
-        msg = translate_msg("Reciever not available") + '\n'
-        connection.sendall(msg.encode())
-    else:
-        with clients_lock:
-            name_to_client[json['reciever']].sendall(msg.encode())
+        print("there is nobody like that")
+        return None
+
+    print("Original: " + json['name'] + '--->' + json['reciever'] + " " + json['msg'])
+    msg = json['name'] + ': ' + translate_pager_msg(json) + '\n'
+    print("Sent: " + json['name'] + '--->' + json['reciever'] + " " +translate_pager_msg(json))
+    with clients_lock:
+        name_to_client[json['reciever']].sendall(msg.encode())
 
 
 def multi_threaded_client(connection):
     global clients_lock
 
     connection.send(str.encode('Server is working:'))
-    
+
     with clients_lock:
         clients.add(connection)
     try:
         while True:
             data = connection.recv(2048)
-            
+
             if not data:
                 break
-              
-            response = json.loads(data) 
+
+            response = json.loads(data)
 
             if len(response) == 2:
                 save_init_msg(response, connection)
 
             else:
-                send_msg(response, connection)
+                send_msg(response)
     finally:
         with clients_lock:
             clients.remove(connection)
-            connection.close() 
+            connection.close()
 
 
 def make_server():
     global ThreadCount
     Client, address = ServerSideSocket.accept()
-    print('Connected to: ' + address[0] + ':' + str(address[1])) 
+    print('Connected to: ' + address[0] + ':' + str(address[1]))
     start_new_thread(multi_threaded_client, (Client, ))
     ThreadCount += 1
     print('Thread Number: ' + str(ThreadCount))
 
-#Program loop:
-while True:    
+
+# Program loop:
+while True:
     make_server()
 ServerSideSocket.close()

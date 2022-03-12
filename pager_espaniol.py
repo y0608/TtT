@@ -1,13 +1,21 @@
 import socket
 from _thread import *
-import json
+import json 
+import time
 
 ClientMultiSocket = socket.socket()
 host = '192.168.1.33'
 port = 2004
 
-header = {"name": "Yoan", "language": "zh", "reciever":"", "msg":""}  # a real dict.
-init_header = {"name": "Yoan", "language": "zh"}
+header = {"name": "Markos", "language": "es", "reciever":"", "msg":""}  # a real dict.
+init_header = {"name": "Markos", "language": "es"}
+
+demo1 = "hola mi nombre es Markos"
+demo2 = "No hay combustible"
+demo3 = "¿Dónde está mi cepillo de dientes?"
+demos = [demo1, demo2, demo3]
+
+recievers = ['Pier','Marioo','Ivanushka']
 
 print('Waiting for connection response')
 
@@ -23,15 +31,17 @@ def send_init_msg():
     ClientMultiSocket.send(bytes(data,encoding="utf-8"))
 
 def send_msg():
+    i = 0
     while True:
-        Reciever = input()
-        Input = input()
-        header["reciever"] = Reciever
-        header["msg"] = Input
-
+        header["reciever"] = recievers[i]
+        header["msg"] = demos[i]
         data = json.dumps(header)
         ClientMultiSocket.send(bytes(data,encoding="utf-8"))
-
+        i+=1
+        if i == 3:
+            i = 0
+        time.sleep(10)
+        
 def receive_msg():
     while True:
         res = ClientMultiSocket.recv(1024)
