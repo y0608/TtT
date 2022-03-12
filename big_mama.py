@@ -40,17 +40,17 @@ def multi_threaded_client(connection):
             #response = data.decode('utf-8') 
              
             response = json.loads(data)
-            print(response['name'] + ': ' + response['msg'])
+            msg = response['name'] + ': ' + response['msg'] 
 
             if not data:
                 break
             
-            msg_out = translete_msg(str(response)) + '\n'
+            msg_out = translete_msg(str(msg)) + '\n'
             
             with clients_lock:
                 for curr in  clients:
                     if(curr!=connection):
-                        curr.sendall(msg_out.encode())
+                        curr.sendall(msg.encode())
     finally:
         with clients_lock:
             clients.remove(connection)

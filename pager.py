@@ -2,7 +2,7 @@ import socket
 from _thread import *
 import json
 
-header = {"name": "Yoan", "language": "en", "msg":""}  # a real dict.
+header = {"name": "Radi", "language": "en", "msg":""}  # a real dict.
 
 ClientMultiSocket = socket.socket()
 host = '192.168.1.20'
@@ -20,7 +20,7 @@ res = ClientMultiSocket.recv(1024)
 
 def send_msg():
     while True:
-        Input = input('You: ')  # TODO: 'your name: ... '
+        Input = input()  # TODO: 'your name: ... '
         header["msg"] = Input
         data = json.dumps(header)
         ClientMultiSocket.send(bytes(data,encoding="utf-8"))
