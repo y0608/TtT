@@ -2,11 +2,11 @@ import socket
 from _thread import *
 import json
 
-header = {"name": "Radi", "language": "en", "msg":""}  # a real dict.
+header = {"name": "Radi", "language": "en", "resiver":"", "msg":""}  # a real dict.
 init_header = {"name": "Radi", "language": "en"}
 
 ClientMultiSocket = socket.socket()
-host = '192.168.1.20'
+host = '192.168.1.2'
 port = 2004
 
 print('Waiting for connection response')
@@ -24,8 +24,11 @@ def send_init_msg():
 
 def send_msg():
     while True:
-        Input = input()  # TODO: 'your name: ... '
+        Resiver = input("Send to: ")
+        Input = input("Your message: ")
+        header["resiver"] = Resiver
         header["msg"] = Input
+
         data = json.dumps(header)
         ClientMultiSocket.send(bytes(data,encoding="utf-8"))
 
