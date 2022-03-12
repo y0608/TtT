@@ -10,6 +10,7 @@ TtT pager представлява N на брой устройства - пей
 Пейджърите са малки и компактни, за да могат да се приложат на ръката на даден астронавт, те също така имат и екранче (дисплей), което да визуализира съобщенията.  Те имат функционалност за водене на личен дневник на всеки един от космонавтите и отбелязване на забележки. 
 Project for Hacktues Infinity 2022.
 
+https://drive.google.com/drive/folders/1cIqOoBTIE0JV6LVrTgF-_7vFS1UtPZEJ?usp=sharing
 ### Team
 Jivko, Mitko, Georgi, Yoan, Radoslav
 
