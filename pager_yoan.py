@@ -3,7 +3,7 @@ from _thread import *
 import json
 
 ClientMultiSocket = socket.socket()
-host = '192.168.1.2'
+host = '192.168.1.33'
 port = 2004
 
 header = {"name": "Yoan", "language": "en", "reciever":"", "msg":""}  # a real dict.
@@ -35,7 +35,7 @@ def send_msg():
 def receive_msg():
     while True:
         res = ClientMultiSocket.recv(1024)
-        print('\n'+res.decode('utf-8'))
+        print(res.decode('utf-8'))
 
 
 
