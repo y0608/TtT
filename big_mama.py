@@ -1,4 +1,5 @@
 import socket
+import json
 import os
 from _thread import *
 import threading
@@ -6,7 +7,7 @@ import threading
 ServerSideSocket = socket.socket()
 ThreadCount = 0
 
-host = '192.168.1.33'
+host = '192.168.1.20'
 port = 2004
 
 
@@ -21,8 +22,9 @@ clients = set()
 clients_lock = threading.Lock()
 
 
-def translete_msg(msg):
-    return msg.upper()
+def translete_msg(json):
+    return json
+
 
 #Client:
 def multi_threaded_client(connection):
@@ -35,13 +37,16 @@ def multi_threaded_client(connection):
     try:
         while True:
             data = connection.recv(2048)
-            response = 'Server message: ' + data.decode('utf-8') #TODO: 'Name of sender: '
+            #response = data.decode('utf-8') 
+             
+            response = json.loads(data)
+            print(response['name'] + ': ' + response['msg'])
 
             if not data:
                 break
             
             msg_out = translete_msg(str(response)) + '\n'
-            print(msg_out)
+            
             with clients_lock:
                 for curr in  clients:
                     if(curr!=connection):
