@@ -1,7 +1,7 @@
 import socket
 from _thread import *
 ClientMultiSocket = socket.socket()
-host = '192.168.1.20'
+host = '192.168.1.33' 
 port = 2004
 
 print('Waiting for connection response')
@@ -15,7 +15,7 @@ res = ClientMultiSocket.recv(1024)
 
 def send_msg():
     while True:
-        Input = input('Hey there: ') 
+        Input = input('Hey there: ') #TODO: 'your name: ... '
         ClientMultiSocket.send(str.encode(Input))
     
 def resive_msg():
