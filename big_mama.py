@@ -1,14 +1,18 @@
+from operator import imod
 import socket
 from _thread import *
 import threading
 import json
 import os
 from argostranslate import package, translate
+from socketio import ClientNamespace
+from host import host,port
 
+ServerSideSocket = socket.socket()
+ThreadCount = 0
 
 def translate_msg(message, from_language, to_language):
     from argostranslate import package, translate
-
 
 def translate_msg(msg, fromL, toL):
 
@@ -59,8 +63,6 @@ def translate_msg(msg, fromL, toL):
         output += translation2.translate(temp.strip()) + "\n"
     else:
         installed_languages = translate.get_installed_languages()
-        for i in installed_languages:
-            print(i.name)
 
         translation = installed_languages[languages[first]].get_translation(
             installed_languages[languages[second]])
@@ -69,12 +71,6 @@ def translate_msg(msg, fromL, toL):
 
     return output
 
-
-ServerSideSocket = socket.socket()
-ThreadCount = 0
-
-host = '192.168.1.33'
-port = 2004
 
 try:
     ServerSideSocket.bind((host, port))
@@ -88,33 +84,41 @@ clients_lock = threading.Lock()
 
 name_to_client = {}
 name_to_language = {}
+client_to_language = {}
 
-
-def translate_pager_msg(json):
-    from_language = json["language"]
-    to_language = name_to_language[json["reciever"]]
+def translate_pager_msg(from_language,to_language, message):
     print(from_language + '   ' + to_language)
-    message = json["msg"]
     msg = translate_msg(message, from_language, to_language)
     return msg
-
 
 def save_init_msg(json, connection):
     name_to_client[json["name"]] = connection
     name_to_language[json["name"]] = json["language"]
+    client_to_language[connection] = json['language'] 
 
-
-def send_msg(json):
+def send_msg(connection,json):
     global clients_lock
-    if json['reciever'] not in name_to_client:
+    
+    if json['reciever'] == 'all':
+        for curr in clients:
+            if curr != connection:
+                msg = json['name'] + ': ' + translate_pager_msg(json["language"], client_to_language[curr],json["msg"]) + '\n'
+                curr.sendall(msg.encode())
+        return None
+    elif json['reciever'] not in name_to_client:
         print("there is nobody like that")
         return None
-
-    print("Original: " + json['name'] + '--->' + json['reciever'] + " " + json['msg'])
-    msg = json['name'] + ': ' + translate_pager_msg(json) + '\n'
-    print("Sent: " + json['name'] + '--->' + json['reciever'] + " " +translate_pager_msg(json))
-    with clients_lock:
-        name_to_client[json['reciever']].sendall(msg.encode())
+    else:
+        translated = translate_pager_msg(json["language"],name_to_language[json["reciever"]],json["msg"])
+        
+        #server prints
+        print("Original: " + json['name'] + '--->' + json['reciever'] + " " + json['msg'])
+        print("Sent: " + json['name'] + '--->' + json['reciever'] + " " + translated)
+        
+        msg = json['name'] + ': ' + translated + '\n'
+        
+        with clients_lock:
+            name_to_client[json['reciever']].sendall(msg.encode())
 
 
 def multi_threaded_client(connection):
@@ -127,7 +131,6 @@ def multi_threaded_client(connection):
     try:
         while True:
             data = connection.recv(2048)
-
             if not data:
                 break
 
@@ -135,9 +138,8 @@ def multi_threaded_client(connection):
 
             if len(response) == 2:
                 save_init_msg(response, connection)
-
             else:
-                send_msg(response)
+                send_msg(connection,response)
     finally:
         with clients_lock:
             clients.remove(connection)

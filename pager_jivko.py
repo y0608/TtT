@@ -1,13 +1,13 @@
 import socket
 from _thread import *
 import json 
+from host import host,port
 
 ClientMultiSocket = socket.socket()
-host = '192.168.1.33'
-port = 2004
 
-header = {"name": "Radi", "language": "en", "reciever":"", "msg":""}  # a real dict.
-init_header = {"name": "Radi", "language": "en"}
+
+header = {"name": "Jivko", "language": "zh", "reciever":"", "msg":""}  # a real dict.
+init_header = {"name": "Jivko", "language": "zh"}
 
 print('Waiting for connection response')
 

@@ -2,10 +2,10 @@ import socket
 from _thread import *
 import json 
 import time
+from host import host,port
 
 ClientMultiSocket = socket.socket()
-host = '192.168.1.33'
-port = 2004
+
 
 header = {"name": "Markos", "language": "es", "reciever":"", "msg":""}  # a real dict.
 init_header = {"name": "Markos", "language": "es"}
