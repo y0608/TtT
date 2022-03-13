@@ -6,8 +6,8 @@ from host import host,port
 ClientMultiSocket = socket.socket()
 
 
-header = {"name": "Jivko", "language": "zh", "reciever":"", "msg":""}  # a real dict.
-init_header = {"name": "Jivko", "language": "zh"}
+header = {"name": "JIVKO", "language": "zh", "reciever":"", "msg":""}  # a real dict.
+init_header = {"name": "JIVKO", "language": "zh"}
 
 print('Waiting for connection response')
 
