@@ -60,6 +60,8 @@ time <br />
  - Йоан
  - Ради
 
+### Версии
+ - v1 - [HackTUES Infinity](https://github.com/y0608/TtT/releases/tag/HackTUES)
 
 
 ****************************************
