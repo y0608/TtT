@@ -24,7 +24,8 @@ Project for Hacktues Infinity 2022.
 -Make server е функция, която създава връзка за всеки свързал се със сървъра пейджър посредством създаване на нов процес (треад(thread)).
 -Send message получава  json и клиент използвайки json генериращ  съобщения, които искаме да изпратим, проверяваме пейджъра, дали съществува..
 
-
+### Технологии
+MCU-to ще бъде с микро Python, а Raspberry си е с Python
 
 ### Части
 - 2x ESP 32; 
@@ -38,9 +39,10 @@ Project for Hacktues Infinity 2022.
  - Ще има speak to text и text to speach, но в бъдеще с части микрофон и speaker,  ама нямаме пари, 😭
  - Ще работи точно като пейджър!!
 
-### Технологии
-MCU-to ще бъде с микро Python, а Raspberry си е с Python
 
+### Инсталация
+Модели нужни за argostranslate:
+https://drive.google.com/drive/folders/1cIqOoBTIE0JV6LVrTgF-_7vFS1UtPZEJ?usp=sharing
 ### Библиотеки python
 argostranslate
 socket
@@ -48,9 +50,8 @@ operator
 json
 threading
 thread
-time юн <br />
-Модели нужни за argostranslate:
-https://drive.google.com/drive/folders/1cIqOoBTIE0JV6LVrTgF-_7vFS1UtPZEJ?usp=sharing
+time <br />
+
 
 ### Отбор
  - Живко
