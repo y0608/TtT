@@ -1,6 +1,6 @@
 # Project for HackTUES Infinity
 <br/>
-![image](https://user-images.githubusercontent.com/54147006/158648332-543c6102-ee57-43a9-9972-02ef9ae692fb.png)
+![header2b](https://user-images.githubusercontent.com/54147006/158683996-cc4a2001-8cb8-4dcb-bdc1-2deac70e14f8.png)
 <br/>
 Нашият проект цели лесна комуникация в космоса между космонавти, говорещи различни езици.
 <br/>
@@ -12,7 +12,7 @@ TtT pager представлява N на брой устройства - пей
 
 <br/>
 <br/>
-![image](https://user-images.githubusercontent.com/54147006/158648262-a04f5d41-55d3-474d-abc8-6db4c11f3689.png)
+![spex](https://user-images.githubusercontent.com/54147006/158684025-d0dce7af-693a-47db-b600-66bcd88acb44.png)
 <br/>
 <br/>
 
