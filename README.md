@@ -1,5 +1,5 @@
 # Project for HackTUES Infinity
-[header2b](https://user-images.githubusercontent.com/54147006/158683996-cc4a2001-8cb8-4dcb-bdc1-2deac70e14f8.png)
+![header2b](https://user-images.githubusercontent.com/54147006/158683996-cc4a2001-8cb8-4dcb-bdc1-2deac70e14f8.png)
 <br/>
 
 Нашият проект цели лесна комуникация в космоса между космонавти, говорещи различни езици.
