@@ -2,6 +2,14 @@ import time
 from machine import Pin
 from time import sleep
 
+import socket
+import network
+from _thread import *
+import json
+
+from LCD import CharLCD
+
+
 # CONSTANTS
 KEY_UP   = const(0)
 KEY_DOWN = const(1)
@@ -89,10 +97,13 @@ def get_keycodes():
                     #print(chara,count)
                     time.sleep(0.3)
 
-import socket
-import network
-from _thread import *
-import json
+def test_lcd():
+    lcd = CharLCD(rs=13, en=12, d4=14, d5=27, d6=26, d7=25, cols=16, rows=2)
+    lcd.message('Hello', 2)
+    lcd.set_line(1)
+    lcd.message('World!', 2)
+    sleep(3.0)
+
 station = network.WLAN(network.STA_IF)
 station.active(True)
 if not station.isconnected():
