@@ -24,8 +24,8 @@ def send_init_msg():
 
 def send_msg():
     while True:
-        Reciever = input()
-        Input = input()
+        Reciever = input('接收者')
+        Input = input('输入')
         header["reciever"] = Reciever
         header["msg"] = Input
 
