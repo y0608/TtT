@@ -1,7 +1,7 @@
 import socket
 from _thread import *
 import json
-from ../host import host,port
+from host import host,port
 
 ClientMultiSocket = socket.socket()
 
@@ -9,10 +9,11 @@ ClientMultiSocket = socket.socket()
 header = {"name": "Yoan", "language": "en", "reciever":"", "msg":""}  # a real dict.
 init_header = {"name": "Yoan", "language": "en"}
 
-print('Waiting for connection response')
+print('Waiting for connection response ...')
 
 try:
     ClientMultiSocket.connect((host, port))
+    print('Connected!')
 except socket.error as e:
     print(str(e))
 
@@ -24,8 +25,9 @@ def send_init_msg():
 
 def send_msg():
     while True:
-        Reciever = input()
-        Input = input()
+        #language is en => english text 
+        Reciever = input('Reciever: ')
+        Input = input('Text: ')
         header["reciever"] = Reciever
         header["msg"] = Input
 
@@ -38,9 +40,11 @@ def receive_msg():
         print(res.decode('utf-8'))
 
 
-
-send_init_msg()
-start_new_thread(receive_msg, ())
-send_msg()
+try:
+    send_init_msg()
+    start_new_thread(receive_msg, ())
+    send_msg()
+except KeyboardInterrupt:
+    ClientMultiSocket.close()
 
 ClientMultiSocket.close()
