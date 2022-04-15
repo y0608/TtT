@@ -9,6 +9,8 @@ import json
 
 from LCD import CharLCD
 
+lcd = CharLCD(rs=1, en=3, d4=15, d5=13, d6=12, d7=14,
+                  cols=16, rows=2)
 
 # CONSTANTS
 KEY_UP   = const(0)
@@ -58,8 +60,6 @@ def scan(row, col):
     return key
 
 def get_keycodes():
-    #print("starting")
-
     # set all the columns to low
     init()
     output = ""
@@ -97,12 +97,13 @@ def get_keycodes():
                     #print(chara,count)
                     time.sleep(0.3)
 
-def test_lcd():
-    lcd = CharLCD(rs=13, en=12, d4=14, d5=27, d6=26, d7=25, cols=16, rows=2)
-    lcd.message('Hello', 2)
-    lcd.set_line(1)
-    lcd.message('World!', 2)
-    sleep(3.0)
+def print_lcd_message(msg):
+    lcd.clear()
+    lcd.message(msg)
+    sleep(1.0)
+    for i in range(len(msg)):
+        sleep(0.25)
+        lcd.move_right()
 
 station = network.WLAN(network.STA_IF)
 station.active(True)
@@ -134,19 +135,21 @@ def send_init_msg():
 
 def send_msg():
     while True:
-        #Resiver = input("Send to: ")
-        #Input = input("Your message: ")
-        #print(type(Resiver),type(Input))
-        #header["reciever"] = Resiver
-        #header["msg"] = Input
+        #keyboard
+        Resiver = input("Send to: ")
+        Input = input("Your message: ")
+        print(type(Resiver),type(Input))
+        header["reciever"] = Resiver
+        header["msg"] = Input
         
-        a = get_keycodes()
-        time.sleep(1)
-        b = get_keycodes()
-        time.sleep(1)
-        #print(a,b)
-        header["reciever"] = str(a)#str(get_keycodes())
-        header["msg"] = str(b)#str(get_keycodes())
+        #keypad
+        # a = get_keycodes()
+        # time.sleep(1)
+        # b = get_keycodes()
+        # time.sleep(1)
+        # header["reciever"] = str(a)
+        # header["msg"] = str(b)
+        
         time.sleep(1)
         data = json.dumps(header)
         ClientMultiSocket.send(data)
@@ -154,7 +157,9 @@ def send_msg():
 def resive_msg():
     while True:
         res = ClientMultiSocket.recv(1024)
-        print(res.decode('utf-8'))
+        msg = res.decode('utf-8')
+        print(msg) #console
+        print_lcd_message(msg) #lcd
 
 
 
